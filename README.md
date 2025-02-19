@@ -14,4 +14,6 @@ Changes done:
 10. gen Function Output Handling: The code now directly uses the string returned by the gen function, eliminating the need for indexing ([0]) and improving robustness by checking for the existence of "Output:\n" before splitting. This change is consistent with the earlier modification to the gen function itself, which now guarantees a string return.
 11. The code was updated to remove the unused instruct_model_summaries list and to correctly handle the string output of the gen function, including a check for the "Output:\n" delimiter before splitting, for both the original and PEFT model outputs.
 
+![image](https://github.com/user-attachments/assets/b9e99b91-83b4-44ee-89c2-eb3690aa2990)
+
 ![image](https://github.com/user-attachments/assets/029ec8bd-3f1e-494a-8acd-529d16d505eb)
