@@ -14,8 +14,7 @@ Changes done:
 - In the initial version, the model was loaded using AutoModelForSeq2SeqLM.from_pretrained with trust_remote_code=True and low_cpu_mem_usage=True.
 - In the revised version, torch_dtype=torch.float16 was added to the model loading parameters.
 
-4.
-Training Configuration:
+4. Training Configuration:
 - In the initial version, the TrainingArguments were configured with fp16=True, optim="paged_adamw_8bit", and per_device_train_batch_size=1.
 - In the revised version, gradient_accumulation_steps=4 and max_grad_norm=0.3 were added to the TrainingArguments.
 
