@@ -2,47 +2,16 @@
 Hugging Face: https://huggingface.co/Rasmuzeri/phi-2-dialogsum-finetuned
 
 Changes done:
-1. Library Installation:
-- In the initial version, the code started with library installations using !pip install.
-- In the revised version, the installation commands were moved to the beginning of the notebook to ensure all necessary libraries are installed before any other code is run.
-
-2. Tokenizer Configuration:
-- In the initial version, the tokenizer was instantiated with trust_remote_code=True and padding_side="left".
-- In the revised version, use_fast=False was added to the tokenizer instantiation parameters.
-
-3. Model Loading:
-- In the initial version, the model was loaded using AutoModelForSeq2SeqLM.from_pretrained with trust_remote_code=True and low_cpu_mem_usage=True.
-- In the revised version, torch_dtype=torch.float16 was added to the model loading parameters.
-
-4. Training Configuration:
-- In the initial version, the TrainingArguments were configured with fp16=True, optim="paged_adamw_8bit", and per_device_train_batch_size=1.
-- In the revised version, gradient_accumulation_steps=4 and max_grad_norm=0.3 were added to the TrainingArguments.
-
-5. GPU utilization print function
-- the print_gpu_utilization() function was added in the revised version
-
-6. Training Loop:
-- In the initial version, the training loop used the Trainer class with the specified model, dataset, and training arguments.
-- In the revised version, the training loop was modified to include gradient accumulation and gradient clipping using the accelerator and optimizer objects.
-
-7. Evaluation:
-- In the initial version, the evaluation was performed using the evaluate function with the specified metric.
-- In the revised version, the evaluation was moved inside the training loop to evaluate the model's performance on the fly.
-
-8. Logging:
-- In the initial version, the code logged the training loss and learning rate using wandb.log.
-- In the revised version, additional logging was added to track the evaluation results during training.
-
-9. Data Loading:
-- In the initial version, the dataset was loaded using load_dataset with the specified dataset name and split.
-- In the revised version, the dataset loading was modified to handle different splits of the dataset.
-
-10. Preprocessing:
-- In the initial version, the preprocessing function preprocess_function was defined to tokenize the input and target sequences.
-- In the revised version, the preprocessing function was updated to handle different input formats and include additional preprocessing steps.
-
-11. Summary Generation:
-- In the initial version, the summary generation was performed using the model.generate method with the specified input sequence.
-- In the revised version, the summary generation was modified to include additional parameters such as max_length, num_beams, and temperature.
+1. Import AutoTokenizer: Added the explicit import from transformers import AutoTokenizer.
+2. GPU Utilization Function: Added a function print_gpu_utilization() to display GPU memory usage. This function requires the pynvml library.
+3. Tokenizer Consistency: Changed the gen function to use the same tokenizer instance created earlier in the code, rather than creating a separate eval_tokenizer. The tokenization process is also simplified and the tensors are explicitly moved to "cuda" within the function.
+4. gen Function Return: Modified the gen function to consistently return a string. It now checks for the presence of "Output:\n" and extracts the relevant part of the generated text. It also includes a warning if the delimiter is not found and returns the entire generated text in that case. The original code returned a list even when num_return_sequences was set to 1. The new code always returns a string.
+5. gen Function Call: The call to the gen function is simplified. The result is directly assigned to output, removing the unnecessary indexing and split.  The original code output = res[0].split('Output:\n')[1] is replaced with the now correctly functioning output = gen(original_model, formatted_prompt, 100).
+6. Dash Line: The creation of the dash line is simplified using string multiplication: dash_line = '-' * 100.
+7. create_prompt_formats Function: The create_prompt_formats function is modified to use .get() when accessing the dialogue and summary fields of the sample dictionary. This prevents potential KeyError exceptions if these keys are missing.  The joining of the parts is also made more explicit.  The code is also simplified by removing unnecessary f-strings where they are not needed.
+8. The training configuration was modified by reducing max_steps, logging_steps, save_steps, and eval_steps to 500 and 50 respectively, and by removing the explicit setting of peft_model.config.use_cache to False, thereby likely enabling caching.
+9. Changed the HF username.
+10. gen Function Output Handling: The code now directly uses the string returned by the gen function, eliminating the need for indexing ([0]) and improving robustness by checking for the existence of "Output:\n" before splitting. This change is consistent with the earlier modification to the gen function itself, which now guarantees a string return.
+11. The code was updated to remove the unused instruct_model_summaries list and to correctly handle the string output of the gen function, including a check for the "Output:\n" delimiter before splitting, for both the original and PEFT model outputs.
 
 ![image](https://github.com/user-attachments/assets/029ec8bd-3f1e-494a-8acd-529d16d505eb)
