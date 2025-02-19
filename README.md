@@ -44,3 +44,5 @@ Changes done:
 11. Summary Generation:
 - In the initial version, the summary generation was performed using the model.generate method with the specified input sequence.
 - In the revised version, the summary generation was modified to include additional parameters such as max_length, num_beams, and temperature.
+
+![image](https://github.com/user-attachments/assets/029ec8bd-3f1e-494a-8acd-529d16d505eb)
